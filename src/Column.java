@@ -46,7 +46,6 @@ public abstract class Column
 				int index=Collections.binarySearch(contents,item);
 				if(index<0) index=~index;
 				contents.add(index,item);
-				
 				for (ColumnObserver co : observers)
 					co.onItemAdded(index, item);
 			/*}

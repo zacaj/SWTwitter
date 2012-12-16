@@ -10,17 +10,17 @@ import twitter4j.TwitterListener;
 
 public class Tweet extends Item
 {
-	public long	  id;
+	public long	  id=-1;
 	public String text;
-	public Tweet  inReplyTo;
-	public long replyId;// -1 if not in reply to a tweet
+	public Tweet  inReplyTo=null;
+	public long replyId=-1;// -1 if not in reply to a tweet
 	public User   user;
 	public Status t4j;
 	public Date   date;
 	public String dateString;
 	public AccountHandler handler;
 	public final static int type=1;
-	public boolean isFavorited;
+	public boolean isFavorited=false;
 
 	protected Tweet(Status status,AccountHandler _handler)//TODO if have multiple accounts, should tweets keep track of handler?  Separate tweets per account even if both follow, or...?
 	{
@@ -38,6 +38,15 @@ public class Tweet extends Item
 		else
 			inReplyTo=handler.getLoadedTweet(replyId);
 		isFavorited=status.isFavorited();
+	}
+	public Tweet(String name, String _text,AccountHandler _handler)
+	{
+		id=(long)(Math.random()*10000);
+		text=_text;
+		handler=_handler;
+		user=handler.getUser(name);
+		date=new Date();
+		t4j=null;
 	}
 	public int getType()
 	{

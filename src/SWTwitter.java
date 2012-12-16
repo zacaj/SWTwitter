@@ -1,7 +1,9 @@
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -21,47 +23,48 @@ import org.eclipse.swt.widgets.*;
 public class SWTwitter
 {
 	public AccountHandler handler;
-	public Queue<Runnable> tasks;
+	private Queue<Runnable> tasks;
+	public Shell shell;
+	public Display display;
 	public static void main(String[] args)
 	{
 		SWTwitter twitter=new SWTwitter();
 	}
+	public synchronized void addTask(Runnable runnable)
+	{
+		tasks.add(runnable);
+	}
 	public SWTwitter()
 	{
 		tasks=new ConcurrentLinkedQueue<Runnable>();
-		final Display display=new Display();
+		display=new Display();
 		AvatarCache.device=display;
-		Shell shell=new Shell(display);
+		shell=new Shell(display);
 		shell.setSize(400,800);
 		shell.setLocation(1000,100);
 		shell.setText("ZATCAP SWT");
 		FormLayout layout=new FormLayout();
 		shell.setLayout(layout);
 		
-		ScrolledComposite scroll=new ScrolledComposite(shell,SWT.V_SCROLL);
-		scroll.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
-		FormData data=new FormData();
-		data.height=600;
-		data.left=new FormAttachment(0,0);
-		data.right=new FormAttachment(100,0);
-		scroll.setLayoutData(data);
-		scroll.setLayout(new FillLayout());
 		
 		
-		shell.open();
+		
 		String path = "";
 		File directory = new File(path);
 		directory.mkdirs();
 		handler=new AccountHandler();
 		
-		{
 			Column column;
 			handler.columns.add(column = new EveryColumn());
 			{
-				SWTColumnObserver observer = new SWTColumnObserver(column, scroll,this);
+				SWTColumnObserver observer = new SWTColumnObserver(column,this);
 			}
-		}
-		try
+			handler.columns.add(column = new MentionColumn("zacaj_"));
+			{
+				//SWTColumnObserver observer = new SWTColumnObserver(column,this);
+				
+			}
+		/*try
 		{
 			BufferedReader in = new BufferedReader(new FileReader(path
 					+ "user.txt"));
@@ -80,7 +83,39 @@ public class SWTwitter
 			//Log.i("ZATCAP","Exception: " + ex.getLocalizedMessage());
 			//for (StackTraceElement ste : ex.getStackTrace())
 				//Log.i("ZATCAP",ste.toString());
-		}
+		}/**/
+		{
+			BufferedReader in;
+			try
+			{
+				in = new BufferedReader(new FileReader("tweets.txt"));
+				long n=new Long(in.readLine());
+				for(int i=0;i<n;i++)
+				{
+					String name=in.readLine();
+					String text=in.readLine();
+					Tweet tweet=new Tweet(name,text,handler);
+					handler.handleItem(tweet);
+				}
+				in.close();
+			}
+			catch (FileNotFoundException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (NumberFormatException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}/**/
+		shell.open();
 		int i=0;
 		while(!shell.isDisposed())
 		{

@@ -6,12 +6,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.*;
 
 
@@ -20,12 +20,22 @@ public class SWTColumnObserver implements ColumnObserver
 	public Column column;
 	Composite tweetComposite;
 	SWTwitter twitter;
+	ScrolledComposite scroll;
 	
-	public SWTColumnObserver(Column _column, ScrolledComposite scroll,SWTwitter _twitter)
+	public SWTColumnObserver(Column _column,SWTwitter _twitter)
 	{
 		column=_column;
 		column.addObserver(this);
 		twitter=_twitter;
+		scroll=new ScrolledComposite(twitter.shell,SWT.V_SCROLL);
+		scroll.setBackground(twitter.display.getSystemColor(SWT.COLOR_GRAY));
+		FormData data=new FormData();
+		data.height=600;
+		data.left=new FormAttachment(0,0);
+		data.right=new FormAttachment(100,0);
+		scroll.setLayoutData(data);
+		scroll.setLayout(new FillLayout());
+		scroll.getVerticalBar().setIncrement(10);
 
 		RowLayout lay=new RowLayout();
 		tweetComposite=new Composite(scroll,SWT.NONE);
@@ -263,11 +273,14 @@ public class SWTColumnObserver implements ColumnObserver
 				c.setSize(c.computeSize(300,SWT.DEFAULT));
 				RowData dat=new RowData();
 				dat.width=300;
+				dat.height=c.getSize().y;
 				c.setLayoutData(dat);
 				tweetComposite.setSize(tweetComposite.computeSize(300,SWT.DEFAULT));
+				tweetComposite.layout();
+				//scroll.layout();
 			}
 		};
-		twitter.tasks.add(runnable);
+		twitter.addTask(runnable);
 	}
 	@Override public void onItemRemoved(int index, Item item)
 	{

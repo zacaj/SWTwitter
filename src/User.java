@@ -13,7 +13,7 @@ public class User
 	public long   id;
 	public String username, fullname;
 	public Image avatar;
-	public URL avatarUrl;
+	public URL avatarUrl=null;
 	
 	public User(twitter4j.User user)
 	{
@@ -30,6 +30,13 @@ public class User
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		AvatarCache.getAvatarForUser(this);
+	}
+
+	public User(String name)
+	{
+		username=fullname=name;
+		id=(long)(Math.random()*10000);
 		AvatarCache.getAvatarForUser(this);
 	}
 

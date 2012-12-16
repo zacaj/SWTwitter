@@ -170,15 +170,15 @@ public class AccountHandler {
 	
 	public void handleItem(Item item)
 	{
-		if(items.put(item.time,item)==null)
+		//if(items.put(item.time,item)==null)
 			for(Column column : columns)
 			{
 				column.newItem(item);
 			}
-		else//   ?  Not sure exactly what should happen if we get the same tweet twice...
+		/*else//   ?  Not sure exactly what should happen if we get the same tweet twice...
 		{
 			@SuppressWarnings("unused") int i=0;//just here to provide some code to break on
-		}
+		}*/
 	}
 	
 	/**
@@ -258,9 +258,11 @@ public class AccountHandler {
 	{
 		User user=users.get(t4juser.getId());
 		if(user==null)
-			return new User(t4juser);
-		else
-			return user;
+		{
+			user=new User(t4juser);
+			users.put(user.id,user);
+		}
+		return user;
 	}
 	
 	/**
@@ -279,6 +281,13 @@ public class AccountHandler {
 	public void removeColumn(Column c)
 	{
 		columns.remove(c);
+	}
+
+	public User getUser(String name)
+	{
+		User user=new User(name);
+		users.put(user.id,user);
+		return user;
 	}
 
 }
