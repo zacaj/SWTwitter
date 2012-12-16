@@ -13,6 +13,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
@@ -26,6 +27,7 @@ public class SWTwitter
 	private Queue<Runnable> tasks;
 	public Shell shell;
 	public Display display;
+	public Composite scrollHolder;
 	public static void main(String[] args)
 	{
 		SWTwitter twitter=new SWTwitter();
@@ -44,10 +46,16 @@ public class SWTwitter
 		shell.setLocation(1000,100);
 		shell.setText("ZATCAP SWT");
 		FormLayout layout=new FormLayout();
-		shell.setLayout(layout);
+		shell.setLayout(layout);	
+		FormData data;
 		
-		
-		
+		scrollHolder=new Composite(shell,SWT.NONE);
+		data=new FormData();
+		data.height=600;
+		data.left=new FormAttachment(0,0);
+		data.right=new FormAttachment(100,0);
+		scrollHolder.setLayoutData(data);
+		scrollHolder.setLayout(new FillLayout());
 		
 		String path = "";
 		File directory = new File(path);
@@ -56,15 +64,43 @@ public class SWTwitter
 		
 			Column column;
 			handler.columns.add(column = new EveryColumn());
-			{
-				SWTColumnObserver observer = new SWTColumnObserver(column,this);
-			}
+			SWTColumnObserver every = new SWTColumnObserver(column,this);
 			handler.columns.add(column = new MentionColumn("zacaj_"));
-			{
-				//SWTColumnObserver observer = new SWTColumnObserver(column,this);
+			SWTColumnObserver mention = new SWTColumnObserver(column,this);
+			mention.scroll.setVisible(false);
+			
+			Button sendTweet=new Button(shell,SWT.PUSH);
+			sendTweet.setText("Tweet");
+			data=new FormData();
+			data.right=new FormAttachment(100,0);
+			data.top=new FormAttachment(scrollHolder,0);
+			sendTweet.setLayoutData(data);
+			
+			final Text tweetBox=new Text(shell,SWT.WRAP);
+			data=new FormData();
+			data.top=new FormAttachment(scrollHolder,0);
+			data.left=new FormAttachment(0,0);
+			data.right=new FormAttachment(sendTweet,0);
+			data.bottom=new FormAttachment(100,0);
+			tweetBox.setLayoutData(data);
 				
-			}
-		/*try
+			sendTweet.addSelectionListener(new SelectionListener() {
+
+				@Override public void widgetSelected(SelectionEvent e)
+				{
+					handler.sendTweet(tweetBox.getText());
+					
+				}
+
+				@Override public void widgetDefaultSelected(SelectionEvent e)
+				{
+					// TODO Auto-generated method stub
+					
+				}
+				
+				
+			});
+		try
 		{
 			BufferedReader in = new BufferedReader(new FileReader(path
 					+ "user.txt"));

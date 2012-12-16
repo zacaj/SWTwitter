@@ -27,13 +27,9 @@ public class SWTColumnObserver implements ColumnObserver
 		column=_column;
 		column.addObserver(this);
 		twitter=_twitter;
-		scroll=new ScrolledComposite(twitter.shell,SWT.V_SCROLL);
+		scroll=new ScrolledComposite(twitter.scrollHolder,SWT.V_SCROLL);
 		scroll.setBackground(twitter.display.getSystemColor(SWT.COLOR_GRAY));
-		FormData data=new FormData();
-		data.height=600;
-		data.left=new FormAttachment(0,0);
-		data.right=new FormAttachment(100,0);
-		scroll.setLayoutData(data);
+		
 		scroll.setLayout(new FillLayout());
 		scroll.getVerticalBar().setIncrement(10);
 
