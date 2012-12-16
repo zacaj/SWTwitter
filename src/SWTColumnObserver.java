@@ -232,6 +232,7 @@ public class SWTColumnObserver implements ColumnObserver
 			@Override public void run()
 			{
 				Composite c=new Composite(tweetComposite,SWT.NONE);
+				c.setData(item);
 				c.setLayout(new FormLayout());
 				{
 					Label name=new Label(c,SWT.NONE);
@@ -278,9 +279,20 @@ public class SWTColumnObserver implements ColumnObserver
 				dat.width=300;
 				dat.height=c.getSize().y;
 				c.setLayoutData(dat);
+				
+				Control[] tweets=tweetComposite.getChildren();
+				int i=0;
+				for(i=0;i<tweets.length;i++)
+				{
+					Item _item=(Item) tweets[i].getData();
+					if(_item.time<item.time)
+						break;
+				}
+				if(i<tweets.length)
+					c.moveAbove(tweets[i]);
+				
 				tweetComposite.setSize(tweetComposite.computeSize(300,SWT.DEFAULT));
 				tweetComposite.layout();
-				//scroll.layout();
 			}
 		};
 		twitter.addTask(runnable);

@@ -67,7 +67,7 @@ public class AccountHandler {
 		streamFactory=new TwitterStreamFactory(config);
 		asyncFactory=new AsyncTwitterFactory(config);
 		twitterFactory=new TwitterFactory(config);
-		try
+		/*try
 		{
 			username=twitterFactory.getInstance().getScreenName();
 		}
@@ -80,7 +80,7 @@ public class AccountHandler {
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}/**/
 
 		
 		UserStream stream=new UserStream(this);
