@@ -18,6 +18,7 @@ public class Tweet extends Item
 	public Status t4j;
 	public Date   date;
 	public String dateString;
+	public String client;
 	public AccountHandler handler;
 	public final static int type=1;
 	public boolean isFavorited=false;
@@ -30,6 +31,7 @@ public class Tweet extends Item
 		text = status.getText();
 		user = handler.getUser(status.getUser());
 		date=status.getCreatedAt();
+		time=date.getTime();
 		dateString=new Long(date.getHours()).toString()+":"+new Long(date.getMinutes()).toString();//TODO 12 hour time+padding
 		time=date.getTime();
 		replyId=status.getInReplyToStatusId();
@@ -38,6 +40,7 @@ public class Tweet extends Item
 		else
 			inReplyTo=handler.getLoadedTweet(replyId);
 		isFavorited=status.isFavorited();
+		client=status.getSource();
 	}
 	public Tweet(String name, String _text,AccountHandler _handler)
 	{
@@ -46,6 +49,7 @@ public class Tweet extends Item
 		handler=_handler;
 		user=handler.getUser(name);
 		date=new Date();
+		time=date.getTime();
 		t4j=null;
 	}
 	public int getType()

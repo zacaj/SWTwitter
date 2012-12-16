@@ -66,8 +66,8 @@ public class SWTwitter
 			handler.columns.add(column = new EveryColumn());
 			SWTColumnObserver every = new SWTColumnObserver(column,this);
 			handler.columns.add(column = new MentionColumn("zacaj_"));
-			SWTColumnObserver mention = new SWTColumnObserver(column,this);
-			mention.scroll.setVisible(false);
+			//SWTColumnObserver mention = new SWTColumnObserver(column,this);
+			//mention.scroll.setVisible(false);
 			
 			Button sendTweet=new Button(shell,SWT.PUSH);
 			sendTweet.setText("Tweet");
@@ -100,6 +100,7 @@ public class SWTwitter
 				
 				
 			});
+		shell.open();
 		try
 		{
 			BufferedReader in = new BufferedReader(new FileReader(path
@@ -120,7 +121,7 @@ public class SWTwitter
 			//for (StackTraceElement ste : ex.getStackTrace())
 				//Log.i("ZATCAP",ste.toString());
 		}/**/
-		{
+		/*{
 			BufferedReader in;
 			try
 			{
@@ -151,7 +152,6 @@ public class SWTwitter
 				e.printStackTrace();
 			}
 		}/**/
-		shell.open();
 		int i=0;
 		while(!shell.isDisposed())
 		{

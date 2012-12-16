@@ -242,6 +242,13 @@ public class SWTColumnObserver implements ColumnObserver
 					data.top=new FormAttachment(0,0);
 					name.setLayoutData(data);
 					
+					Link client=new Link(c,SWT.NONE);
+					client.setText(" at "+tweet.dateString+" via "+tweet.client);
+					data=new FormData();
+					data.left=new FormAttachment(name,3);
+					data.top=new FormAttachment(0,6);
+					client.setLayoutData(data);
+					
 					Label image=new Label(c,SWT.NONE);
 					image.setImage(tweet.user.avatar);
 					data=new FormData();

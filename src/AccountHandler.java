@@ -170,15 +170,15 @@ public class AccountHandler {
 	
 	public void handleItem(Item item)
 	{
-		//if(items.put(item.time,item)==null)
-			for(Column column : columns)
-			{
-				column.newItem(item);
-			}
-		/*else//   ?  Not sure exactly what should happen if we get the same tweet twice...
+		while(items.containsKey(item.time)) item.time++;
+		
+		
+		items.put(item.time,item);
+		
+		for(Column column : columns)
 		{
-			@SuppressWarnings("unused") int i=0;//just here to provide some code to break on
-		}*/
+			column.newItem(item);
+		}
 	}
 	
 	/**
