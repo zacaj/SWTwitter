@@ -4,6 +4,10 @@ import java.util.Vector;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
@@ -27,11 +31,42 @@ public class SWTColumnObserver implements ColumnObserver
 		column=_column;
 		column.addObserver(this);
 		twitter=_twitter;
-		scroll=new ScrolledComposite(twitter.scrollHolder,SWT.V_SCROLL);
+		scroll=new ScrolledComposite(twitter.scrollHolder,SWT.V_SCROLL|SWT.BORDER);
 		scroll.setBackground(twitter.display.getSystemColor(SWT.COLOR_GRAY));
 		
-		scroll.setLayout(new FillLayout());
+		scroll.setLayout(new FormLayout());
 		scroll.getVerticalBar().setIncrement(10);
+		scroll.setExpandHorizontal(true);
+		scroll.setExpandVertical(false);
+		scroll.setMinWidth(100);
+		scroll.setFocus();
+		FormData data=new FormData();
+		data.left=new FormAttachment(0,0);
+		data.top=new FormAttachment(0,0);
+		data.right=new FormAttachment(100,0);
+		data.bottom=new FormAttachment(100,0);
+		scroll.setLayoutData(data);
+		
+		scroll.addMouseListener(new MouseListener()
+		{
+			@Override public void mouseDoubleClick(MouseEvent e)
+			{			}
+			@Override public void mouseDown(MouseEvent e)
+			{
+				scroll.setFocus();
+			}
+			@Override public void mouseUp(MouseEvent e)
+			{			}
+		});
+		scroll.addControlListener(new ControlListener(){
+			@Override public void controlMoved(ControlEvent e)
+			{			}
+			@Override public void controlResized(ControlEvent e)
+			{
+				//scroll.setSize(scroll.computeSize(twitter.shell.getSize().x, SWT.DEFAULT));
+				scroll.layout();
+			}	
+		});
 
 		RowLayout lay=new RowLayout();
 		tweetComposite=new Composite(scroll,SWT.NONE);
@@ -41,188 +76,13 @@ public class SWTColumnObserver implements ColumnObserver
 		lay.fill=true;
 		tweetComposite.setLayout(lay);
 		
-		tweetComposite.setSize(tweetComposite.computeSize(300,SWT.DEFAULT));
-		
-		/*ListAdapter adapter=new ListAdapter() {			
-			@Override public int getCount()
-			{
-				return column.contents.size();
-			}
-
-			@Override public Object getItem(int arg0)
-			{
-				return column.contents.get(arg0);
-			}
-
-			@Override public long getItemId(int arg0)
-			{
-				return column.contents.get(arg0).time;
-			}
-
-			@Override public int getItemViewType(int arg0)
-			{			
-				return column.contents.get(arg0).getType();
-			}
-
-			@Override public View getView(int index, View view, ViewGroup arg2)
-			{
-				if(view==null || !(view instanceof RelativeLayout))
-				{
-					view=new RelativeLayout(activity);
-				}
-				RelativeLayout layout=(RelativeLayout)view;
-				{
-					View v=view.findViewById(6);
-					if(v!=null)
-						layout.removeView(v);
-				}
-				Item item=column.contents.get(index);
-				int type=item.getType();
-				switch(type)
-				{
-				case Retweet.type:
-				{
-					Retweet retweet=(Retweet)item;
-					{
-						{//rt
-							TextView text=(TextView)layout.findViewById(5);
-							if(text==null)
-							{
-								text=new TextView(activity);
-								text.setBackgroundColor(Color.LTGRAY);
-								text.setTextSize(10);
-								text.setTextColor(Color.DKGRAY);
-								text.setId(5);
-								RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-								lp.addRule(RelativeLayout.RIGHT_OF,2);
-								//lp.addRule(RelativeLayout.RIGHT_OF,4);
-					        	lp.addRule(RelativeLayout.LEFT_OF,3);
-					        	lp.addRule(RelativeLayout.ABOVE,1);
-					        	text.setGravity(Gravity.BOTTOM);
-					        	layout.addView(text,lp);
-							}				
-							String str="RT by "+retweet.retweetedBy.getName();
-							if(retweet.nRetweet>1)
-								str+=" (x"+new Long(retweet.nRetweet).toString()+")";
-							text.setText(str);
-						}
-					}
-				}
-				case Tweet.type:
-				{
-					Tweet tweet=(Tweet)item;
-					{
-			        	ImageView image=(ImageView)layout.findViewById(4);
-			        	if(image==null)
-			        	{
-			        		image=new ImageView(activity);
-							image.setId(4);
-							RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-				        	lp.addRule(RelativeLayout.BELOW,2);
-				        	lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-				        	layout.addView(image,lp);
-			        	}
-			        	image.setImageBitmap(tweet.user.avatar);
-					}
-					{//username
-						TextView text=(TextView)layout.findViewById(2);
-						if(text==null)
-						{
-							text=new TextView(activity);
-							text.setBackgroundColor(Color.LTGRAY);
-							text.setTextSize(12);
-							text.setTextColor(Color.DKGRAY);
-							text.setId(2);
-							RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-				        	lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-				        	lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-				        	layout.addView(text,lp);
-						}				
-						text.setText(tweet.user.getName());
-					}
-					{//time
-						TextView text=(TextView)layout.findViewById(3);
-						if(text==null)
-						{
-							text=new TextView(activity);
-							text.setBackgroundColor(Color.LTGRAY);
-							text.setTextSize(10);
-							text.setTextColor(Color.DKGRAY);
-							text.setId(3);
-							RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-				        	lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-				        	lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-				        	layout.addView(text,lp);
-						}				
-						text.setText(tweet.dateString);
-					}
-					{//text
-						TextView text=(TextView)layout.findViewById(1);
-						if(text==null)
-						{
-							text=new TextView(activity);
-							text.setBackgroundColor(Color.LTGRAY);
-							text.setTextSize(14);
-							text.setTextColor(Color.BLACK);
-							text.setId(1);
-							RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);	        	
-							lp.addRule(RelativeLayout.BELOW,2);
-				        	lp.addRule(RelativeLayout.BELOW,3);
-				        	lp.addRule(RelativeLayout.RIGHT_OF,4);
-				        	layout.addView(text,lp);
-						}			
-						text.setText(tweet.text);
-					}
-					view.setOnClickListener(new TweetSelectListener(tweet,activity.app));
-					break;
-				}
-				}
-				return view;
-			}
-
-			@Override public int getViewTypeCount()
-			{
-				return 3;
-			}
-
-			@Override public boolean hasStableIds()
-			{
-				return true;
-			}
-
-			@Override public boolean isEmpty()
-			{
-				return column.contents.isEmpty();
-			}
-			
-			@Override public void registerDataSetObserver(
-					DataSetObserver observer)
-			{
-				observers.add(observer);
-			}
-
-			@Override public void unregisterDataSetObserver(
-					DataSetObserver observer)
-			{
-				observers.remove(observer);
-			}
-
-			@Override public boolean areAllItemsEnabled()
-			{
-				// TODO What does this MEAN
-				return false;
-			}
-
-			@Override public boolean isEnabled(int position)
-			{
-				// TODO What does this MEAN
-				return false;
-			}
-			
-		};
-		
-		
-		listView.setAdapter(adapter);*/
+		data=new FormData();
+		data.left=new FormAttachment(0,0);
+		data.top=new FormAttachment(0,0);
+		data.right=new FormAttachment(100,0);
+		data.bottom=new FormAttachment(100,0);
+		tweetComposite.setLayoutData(data);
+		//tweetComposite.setSize(tweetComposite.computeSize(scroll.getSize().x,SWT.DEFAULT));
 	}
 	@Override public void onItemAdded(int index, final Item item)
 	{
@@ -274,9 +134,10 @@ public class SWTColumnObserver implements ColumnObserver
 				    style1.fontStyle = SWT.BOLD;
 				    text2.setStyleRange(style1);*/
 				}
-				c.setSize(c.computeSize(300,SWT.DEFAULT));
+				c.setSize(c.computeSize(SWT.DEFAULT,SWT.DEFAULT));
+				
 				RowData dat=new RowData();
-				dat.width=300;
+				dat.width=tweetComposite.getSize().x;
 				dat.height=c.getSize().y;
 				c.setLayoutData(dat);
 				
@@ -291,7 +152,7 @@ public class SWTColumnObserver implements ColumnObserver
 				if(i<tweets.length)
 					c.moveAbove(tweets[i]);
 				
-				tweetComposite.setSize(tweetComposite.computeSize(300,SWT.DEFAULT));
+				tweetComposite.setSize(tweetComposite.computeSize(tweetComposite.getSize().x,SWT.DEFAULT));
 				tweetComposite.layout();
 			}
 		};

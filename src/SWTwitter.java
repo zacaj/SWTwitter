@@ -55,7 +55,7 @@ public class SWTwitter
 		data.left=new FormAttachment(0,0);
 		data.right=new FormAttachment(100,0);
 		scrollHolder.setLayoutData(data);
-		scrollHolder.setLayout(new FillLayout());
+		scrollHolder.setLayout(new FormLayout());
 		
 		String path = "";
 		File directory = new File(path);
@@ -65,7 +65,7 @@ public class SWTwitter
 			Column column;
 			handler.columns.add(column = new EveryColumn());
 			SWTColumnObserver every = new SWTColumnObserver(column,this);
-			handler.columns.add(column = new MentionColumn("zacaj_"));
+			//handler.columns.add(column = new MentionColumn("zacaj_"));
 			//SWTColumnObserver mention = new SWTColumnObserver(column,this);
 			//mention.scroll.setVisible(false);
 			
@@ -99,9 +99,9 @@ public class SWTwitter
 				}
 				
 				
-			});
+			});/**/
 		shell.open();
-		try
+		/*try
 		{
 			BufferedReader in = new BufferedReader(new FileReader(path
 					+ "user.txt"));
@@ -121,7 +121,7 @@ public class SWTwitter
 			//for (StackTraceElement ste : ex.getStackTrace())
 				//Log.i("ZATCAP",ste.toString());
 		}/**/
-		/*{
+		{
 			BufferedReader in;
 			try
 			{
