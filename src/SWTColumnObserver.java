@@ -14,6 +14,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
@@ -68,12 +70,10 @@ public class SWTColumnObserver implements ColumnObserver
 			}	
 		});
 
-		RowLayout lay=new RowLayout();
+		GridLayout lay=new GridLayout();
 		tweetComposite=new Composite(scroll,SWT.NONE);
 		scroll.setContent(tweetComposite);
-		lay.type=SWT.HORIZONTAL;
-		lay.wrap=true;
-		lay.fill=true;
+		lay.numColumns=1;
 		tweetComposite.setLayout(lay);
 		
 		data=new FormData();
@@ -136,9 +136,10 @@ public class SWTColumnObserver implements ColumnObserver
 				}
 				c.setSize(c.computeSize(SWT.DEFAULT,SWT.DEFAULT));
 				
-				RowData dat=new RowData();
-				dat.width=tweetComposite.getSize().x;
-				dat.height=c.getSize().y;
+				GridData dat=new GridData();
+				dat.grabExcessHorizontalSpace=true;
+				dat.horizontalAlignment=GridData.HORIZONTAL_ALIGN_FILL;
+				
 				c.setLayoutData(dat);
 				
 				Control[] tweets=tweetComposite.getChildren();
