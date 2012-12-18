@@ -26,7 +26,7 @@ public class AvatarCache
 	    }
 	    else
 	    {
-			user.avatar=new Image(device,(new File("defaultpic.png").toString()));
+			user.avatar=new Image(device,(new File("resources/defaultpic.png").toString()));
 			if(user.avatarUrl==null)
 				return;
 			new Thread(new Runnable() {

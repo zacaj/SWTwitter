@@ -1,5 +1,6 @@
 
 
+import java.io.File;
 import java.util.Vector;
 
 import org.eclipse.swt.SWT;
@@ -95,6 +96,7 @@ public class SWTColumnObserver implements ColumnObserver
 				c.setData(item);
 				c.setLayout(new FormLayout());
 				{
+					SWTweetButtonMouseListener listener;
 					Label name=new Label(c,SWT.NONE);
 					name.setText(tweet.user.username);
 					name.setFont(new Font(tweetComposite.getDisplay(),"Arial",14, SWT.NORMAL));
@@ -115,14 +117,54 @@ public class SWTColumnObserver implements ColumnObserver
 					data=new FormData();
 					data.left=new FormAttachment(0,0);
 					data.top=new FormAttachment(name,0);
-					image.setLayoutData(data);
+					image.setLayoutData(data);			
+
+					Label favorite=new Label(c,SWT.NONE);
+					favorite.setImage(new Image(twitter.display,"resources/favorite.png"));
+					data=new FormData();
+					data.top=new FormAttachment(0,0);
+					data.right=new FormAttachment(100,0);
+					favorite.setLayoutData(data);
+					favorite.addMouseTrackListener(listener=new SWTweetButtonMouseListener(favorite,"favorite",tweet,twitter)
+					{
+						@Override public void mouseUp(MouseEvent e)
+						{
+							if(tweet.isFavorited)
+							{
+								tweet.unfavorite();
+								def="";
+							}
+							else
+							{
+								tweet.favorite();
+								def="_on";
+							}
+						}			
+					});
+					favorite.addMouseListener(listener);
+					
+					Label retweet=new Label(c,SWT.NONE);
+					retweet.setImage(new Image(twitter.display,"resources/retweet.png"));
+					data=new FormData();
+					data.top=new FormAttachment(favorite,0);
+					data.right=new FormAttachment(100,0);
+					retweet.setLayoutData(data);
+					retweet.addMouseTrackListener(listener=new SWTweetButtonMouseListener(retweet,"retweet",tweet,twitter)
+					{
+						@Override public void mouseUp(MouseEvent e)
+						{
+							tweet.retweet();
+							def="_on";
+						}			
+					});
+					retweet.addMouseListener(listener);
 					
 					Label text=new Label(c,SWT.WRAP);
 					text.setText(tweet.text);
 					data=new FormData();
 					data.left=new FormAttachment(image,0);
 					data.top=new FormAttachment(name,0);
-					data.right=new FormAttachment(100,0);
+					data.right=new FormAttachment(favorite,0);
 					data.bottom=new FormAttachment(100,0);
 					text.setLayoutData(data);
 					

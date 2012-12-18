@@ -30,6 +30,7 @@ public class SWTwitter
 	public Display display;
 	public Composite scrollHolder;
 	StackLayout columnStack;
+	long replyId=-1;
 	public static void main(String[] args)
 	{
 		SWTwitter twitter=new SWTwitter();
@@ -107,23 +108,21 @@ public class SWTwitter
 			tweetBox.setLayoutData(data);
 				
 			sendTweet.addSelectionListener(new SelectionListener() {
-
 				@Override public void widgetSelected(SelectionEvent e)
 				{
-					handler.sendTweet(tweetBox.getText());
+					if(replyId==-1)
+						handler.sendTweet(tweetBox.getText());
+					else
+						handler.sendTweet(tweetBox.getText(),replyId);
 					tweetBox.setText("");
 				}
-
 				@Override public void widgetDefaultSelected(SelectionEvent e)
 				{
 					// TODO Auto-generated method stub
-					
 				}
-				
-				
 			});/**/
 		shell.open();
-		/*try
+		try
 		{
 			BufferedReader in = new BufferedReader(new FileReader(path
 					+ "user.txt"));
@@ -146,7 +145,7 @@ public class SWTwitter
 			//for (StackTraceElement ste : ex.getStackTrace())
 				//Log.i("ZATCAP",ste.toString());
 		}/**/
-		{
+		/*{
 			BufferedReader in;
 			try
 			{
