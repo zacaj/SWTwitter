@@ -11,6 +11,7 @@ import net.miginfocom.swt.MigLayout;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -28,6 +29,7 @@ public class SWTwitter
 	public Shell shell;
 	public Display display;
 	public Composite scrollHolder;
+	StackLayout columnStack;
 	public static void main(String[] args)
 	{
 		SWTwitter twitter=new SWTwitter();
@@ -49,13 +51,16 @@ public class SWTwitter
 		shell.setLayout(layout);	
 		FormData data;
 		
+		
+		
 		scrollHolder=new Composite(shell,SWT.NONE);
 		data=new FormData();
 		data.height=600;
 		data.left=new FormAttachment(0,0);
 		data.right=new FormAttachment(100,0);
 		scrollHolder.setLayoutData(data);
-		scrollHolder.setLayout(new FormLayout());
+		columnStack=new StackLayout();
+		scrollHolder.setLayout(columnStack);
 		
 		String path = "";
 		File directory = new File(path);
@@ -65,20 +70,37 @@ public class SWTwitter
 			Column column;
 			handler.columns.add(column = new EveryColumn());
 			SWTColumnObserver every = new SWTColumnObserver(column,this);
-			//handler.columns.add(column = new MentionColumn("zacaj_"));
-			//SWTColumnObserver mention = new SWTColumnObserver(column,this);
-			//mention.scroll.setVisible(false);
+			handler.columns.add(column = new MentionColumn("zacaj_"));
+			SWTColumnObserver mention = new SWTColumnObserver(column,this);
+			columnStack.topControl=every.scroll;
+			every.scroll.setFocus();
+			
+			Button homeColumn=new Button(shell,SWT.PUSH);
+			homeColumn.setText("Home");
+			data=new FormData();
+			data.left=new FormAttachment(0,0);
+			data.top=new FormAttachment(scrollHolder,0);
+			homeColumn.setLayoutData(data);
+			homeColumn.addSelectionListener(new SWTColumnButtonListener(every,this));
+			
+			Button mentionColumn=new Button(shell,SWT.PUSH);
+			mentionColumn.setText("Mentions");
+			data=new FormData();
+			data.left=new FormAttachment(homeColumn,0);
+			data.top=new FormAttachment(scrollHolder,0);
+			mentionColumn.setLayoutData(data);
+			mentionColumn.addSelectionListener(new SWTColumnButtonListener(mention,this));
 			
 			Button sendTweet=new Button(shell,SWT.PUSH);
 			sendTweet.setText("Tweet");
 			data=new FormData();
 			data.right=new FormAttachment(100,0);
-			data.top=new FormAttachment(scrollHolder,0);
+			data.top=new FormAttachment(homeColumn,0);
 			sendTweet.setLayoutData(data);
 			
 			final Text tweetBox=new Text(shell,SWT.WRAP);
 			data=new FormData();
-			data.top=new FormAttachment(scrollHolder,0);
+			data.top=new FormAttachment(homeColumn,0);
 			data.left=new FormAttachment(0,0);
 			data.right=new FormAttachment(sendTweet,0);
 			data.bottom=new FormAttachment(100,0);
@@ -89,7 +111,7 @@ public class SWTwitter
 				@Override public void widgetSelected(SelectionEvent e)
 				{
 					handler.sendTweet(tweetBox.getText());
-					
+					tweetBox.setText("");
 				}
 
 				@Override public void widgetDefaultSelected(SelectionEvent e)
@@ -109,9 +131,12 @@ public class SWTwitter
 			String accessTokenSecret = in.readLine();
 			String restUrl = in.readLine();
 			in.close();
-		
-			handler.accessToken = accessToken;
-			handler.accessTokenSecret = accessTokenSecret;
+			
+			if(accessToken.length()>16)
+			{
+				handler.accessToken = accessToken;
+				handler.accessTokenSecret = accessTokenSecret;
+			}
 			if (restUrl != null) handler.restUrl = restUrl;
 			handler.start();
 		}

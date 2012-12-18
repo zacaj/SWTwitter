@@ -76,12 +76,12 @@ public class SWTColumnObserver implements ColumnObserver
 		lay.numColumns=1;
 		tweetComposite.setLayout(lay);
 		
-		data=new FormData();
+	/*	data=new FormData();
 		data.left=new FormAttachment(0,0);
 		data.top=new FormAttachment(0,0);
 		data.right=new FormAttachment(100,0);
 		data.bottom=new FormAttachment(100,0);
-		tweetComposite.setLayoutData(data);
+		tweetComposite.setLayoutData(data);*/
 		//tweetComposite.setSize(tweetComposite.computeSize(scroll.getSize().x,SWT.DEFAULT));
 	}
 	@Override public void onItemAdded(int index, final Item item)
