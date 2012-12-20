@@ -7,6 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Font;
@@ -117,12 +118,71 @@ public class SWTColumnObserver implements ColumnObserver
 					data=new FormData();
 					data.left=new FormAttachment(0,0);
 					data.top=new FormAttachment(name,0);
-					image.setLayoutData(data);			
+					image.setLayoutData(data);		
+					image.addMouseListener(new MouseAdapter()
+					{
+						@Override public void mouseUp(MouseEvent e)
+						{
+							twitter.tweetBox.setText("@"+tweet.user.username+" ");
+							twitter.replyId=tweet.id;
+							twitter.tweetBox.setFocus();
+							twitter.tweetBox.setSelection(twitter.tweetBox.getText().length());
+						}			
+					});	
 
-					Label favorite=new Label(c,SWT.NONE);
-					favorite.setImage(new Image(twitter.display,"resources/favorite.png"));
+					Label reply=new Label(c,SWT.NONE);
+					reply.setImage(new Image(twitter.display,"resources/reply.png"));
 					data=new FormData();
 					data.top=new FormAttachment(0,0);
+					data.right=new FormAttachment(100,0);
+					reply.setLayoutData(data);
+					reply.addMouseTrackListener(listener=new SWTweetButtonMouseListener(reply,"reply",tweet,twitter)
+					{
+						@Override public void mouseUp(MouseEvent e)
+						{
+							twitter.tweetBox.setText("@"+tweet.user.username+" ");
+							twitter.replyId=tweet.id;
+							twitter.tweetBox.setFocus();
+							twitter.tweetBox.setSelection(twitter.tweetBox.getText().length());
+						}			
+					});
+					reply.addMouseListener(listener);
+					
+					Label retweet=new Label(c,SWT.NONE);
+					retweet.setImage(new Image(twitter.display,"resources/retweet.png"));
+					data=new FormData();
+					data.top=new FormAttachment(reply,0);
+					data.right=new FormAttachment(100,0);
+					retweet.setLayoutData(data);
+					retweet.addMouseTrackListener(listener=new SWTweetButtonMouseListener(retweet,"retweet",tweet,twitter)
+					{
+						@Override public void mouseUp(MouseEvent e)
+						{
+							tweet.retweet();
+							def="_on";
+						}			
+					});
+					retweet.addMouseListener(listener);
+					
+					Label qretweet=new Label(c,SWT.NONE);
+					qretweet.setImage(new Image(twitter.display,"resources/quote_retweet.png"));
+					data=new FormData();
+					data.top=new FormAttachment(retweet,0);
+					data.right=new FormAttachment(100,0);
+					qretweet.setLayoutData(data);
+					qretweet.addMouseTrackListener(listener=new SWTweetButtonMouseListener(qretweet,"quote_retweet",tweet,twitter)
+					{
+						@Override public void mouseUp(MouseEvent e)
+						{
+							twitter.tweetBox.setText("  RT @"+tweet.user.username+" \""+tweet.text+"\"");
+							twitter.replyId=tweet.id;
+						}			
+					});
+					qretweet.addMouseListener(listener);
+					/*Label favorite=new Label(c,SWT.NONE);
+					favorite.setImage(new Image(twitter.display,"resources/favorite.png"));
+					data=new FormData();
+					data.top=new FormAttachment(retweet,0);
 					data.right=new FormAttachment(100,0);
 					favorite.setLayoutData(data);
 					favorite.addMouseTrackListener(listener=new SWTweetButtonMouseListener(favorite,"favorite",tweet,twitter)
@@ -141,30 +201,14 @@ public class SWTColumnObserver implements ColumnObserver
 							}
 						}			
 					});
-					favorite.addMouseListener(listener);
-					
-					Label retweet=new Label(c,SWT.NONE);
-					retweet.setImage(new Image(twitter.display,"resources/retweet.png"));
-					data=new FormData();
-					data.top=new FormAttachment(favorite,0);
-					data.right=new FormAttachment(100,0);
-					retweet.setLayoutData(data);
-					retweet.addMouseTrackListener(listener=new SWTweetButtonMouseListener(retweet,"retweet",tweet,twitter)
-					{
-						@Override public void mouseUp(MouseEvent e)
-						{
-							tweet.retweet();
-							def="_on";
-						}			
-					});
-					retweet.addMouseListener(listener);
+					favorite.addMouseListener(listener);*/
 					
 					Label text=new Label(c,SWT.WRAP);
 					text.setText(tweet.text);
 					data=new FormData();
 					data.left=new FormAttachment(image,0);
 					data.top=new FormAttachment(name,0);
-					data.right=new FormAttachment(favorite,0);
+					//data.right=new FormAttachment(reply,0);
 					data.bottom=new FormAttachment(100,0);
 					text.setLayoutData(data);
 					

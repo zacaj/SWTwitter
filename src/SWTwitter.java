@@ -29,8 +29,9 @@ public class SWTwitter
 	public Shell shell;
 	public Display display;
 	public Composite scrollHolder;
-	StackLayout columnStack;
-	long replyId=-1;
+	public StackLayout columnStack;
+	public long replyId=-1;
+	public final Text tweetBox;
 	public static void main(String[] args)
 	{
 		SWTwitter twitter=new SWTwitter();
@@ -99,7 +100,7 @@ public class SWTwitter
 			data.top=new FormAttachment(homeColumn,0);
 			sendTweet.setLayoutData(data);
 			
-			final Text tweetBox=new Text(shell,SWT.WRAP);
+			tweetBox=new Text(shell,SWT.WRAP);
 			data=new FormData();
 			data.top=new FormAttachment(homeColumn,0);
 			data.left=new FormAttachment(0,0);
