@@ -107,7 +107,7 @@ public class SWTColumnObserver implements ColumnObserver
 					name.setLayoutData(data);
 					
 					Link client=new Link(c,SWT.NONE);
-					client.setText(" at "+tweet.dateString+" via "+tweet.client);
+					client.setText(" via "+tweet.client);
 					data=new FormData();
 					data.left=new FormAttachment(name,3);
 					data.top=new FormAttachment(0,6);
@@ -130,10 +130,17 @@ public class SWTColumnObserver implements ColumnObserver
 						}			
 					});	
 
+					Label date=new Label(c,SWT.NONE);
+					date.setText(tweet.dateString);
+					data=new FormData();
+					data.right=new FormAttachment(100,0);
+					data.top=new FormAttachment(0,0);
+					date.setLayoutData(data);
+					
 					Label reply=new Label(c,SWT.NONE);
 					reply.setImage(new Image(twitter.display,"resources/reply.png"));
 					data=new FormData();
-					data.top=new FormAttachment(0,0);
+					data.top=new FormAttachment(date,0);
 					data.right=new FormAttachment(100,0);
 					reply.setLayoutData(data);
 					reply.addMouseTrackListener(listener=new SWTweetButtonMouseListener(reply,"reply",tweet,twitter)
@@ -203,14 +210,14 @@ public class SWTColumnObserver implements ColumnObserver
 					});
 					favorite.addMouseListener(listener);*/
 					
-					Label text=new Label(c,SWT.WRAP);
+					/*Label text=new Label(c,SWT.WRAP);
 					text.setText(tweet.text);
 					data=new FormData();
 					data.left=new FormAttachment(image,0);
 					data.top=new FormAttachment(name,0);
-					//data.right=new FormAttachment(reply,0);
+					data.right=new FormAttachment(reply,0);
 					data.bottom=new FormAttachment(100,0);
-					text.setLayoutData(data);
+					text.setLayoutData(data);*/
 					
 					/*StyledText text2=new StyledText(c,SWT.WRAP);
 					text2.setText()
@@ -222,9 +229,9 @@ public class SWTColumnObserver implements ColumnObserver
 				}
 				c.setSize(c.computeSize(SWT.DEFAULT,SWT.DEFAULT));
 				
-				GridData dat=new GridData();
+				GridData dat=new GridData(SWT.FILL);
 				dat.grabExcessHorizontalSpace=true;
-				dat.horizontalAlignment=GridData.HORIZONTAL_ALIGN_FILL;
+				dat.widthHint=GridData.FILL_HORIZONTAL;
 				
 				c.setLayoutData(dat);
 				

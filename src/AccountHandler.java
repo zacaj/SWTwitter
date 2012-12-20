@@ -28,6 +28,8 @@ public class AccountHandler {
 	AsyncTwitterFactory asyncFactory;
 	TwitterFactory twitterFactory;
 	
+	TwitterStream stream4j=null;
+	
 	public AccountHandler()
 	{
 		columns=new Vector<Column>();
@@ -84,7 +86,7 @@ public class AccountHandler {
 
 		
 		UserStream stream=new UserStream(this);
-		TwitterStream stream4j=streamFactory.getInstance();
+		stream4j=streamFactory.getInstance();
 		stream4j.addListener(stream);
 		stream4j.user();
 		

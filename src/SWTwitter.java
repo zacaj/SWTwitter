@@ -123,7 +123,7 @@ public class SWTwitter
 				}
 			});/**/
 		shell.open();
-		try
+		/ry
 		{
 			BufferedReader in = new BufferedReader(new FileReader(path
 					+ "user.txt"));
@@ -185,5 +185,7 @@ public class SWTwitter
 			if(!display.readAndDispatch()) display.sleep();
 		}
 		display.dispose();
+		if(handler.stream4j!=null)
+			handler.stream4j.shutdown();
 	}
 }
