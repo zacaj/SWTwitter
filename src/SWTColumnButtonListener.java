@@ -17,6 +17,7 @@ public class SWTColumnButtonListener implements SelectionListener
 		twitter.columnStack.topControl=observer.scroll;
 		twitter.scrollHolder.layout();
 		observer.scroll.setFocus();
+		twitter.currentColumn=observer;
 	}
 
 	@Override public void widgetDefaultSelected(SelectionEvent e)

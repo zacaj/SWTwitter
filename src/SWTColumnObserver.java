@@ -29,6 +29,7 @@ public class SWTColumnObserver implements ColumnObserver
 	Composite tweetComposite;
 	SWTwitter twitter;
 	ScrolledComposite scroll;
+	MouseListener focusListener;
 	
 	public SWTColumnObserver(Column _column,SWTwitter _twitter)
 	{
@@ -51,12 +52,13 @@ public class SWTColumnObserver implements ColumnObserver
 		data.bottom=new FormAttachment(100,0);
 		scroll.setLayoutData(data);
 		
-		scroll.addMouseListener(new MouseListener()
+		scroll.addMouseListener(focusListener=new MouseListener()
 		{
 			@Override public void mouseDoubleClick(MouseEvent e)
 			{			}
 			@Override public void mouseDown(MouseEvent e)
 			{
+				twitter.tweetBox.setCapture(false);
 				scroll.setFocus();
 			}
 			@Override public void mouseUp(MouseEvent e)
@@ -67,7 +69,6 @@ public class SWTColumnObserver implements ColumnObserver
 			{			}
 			@Override public void controlResized(ControlEvent e)
 			{
-				//scroll.setSize(scroll.computeSize(twitter.shell.getSize().x, SWT.DEFAULT));
 				scroll.layout();
 			}	
 		});
@@ -210,14 +211,14 @@ public class SWTColumnObserver implements ColumnObserver
 					});
 					favorite.addMouseListener(listener);*/
 					
-					/*Label text=new Label(c,SWT.WRAP);
+					Label text=new Label(c,SWT.WRAP);
 					text.setText(tweet.text);
 					data=new FormData();
 					data.left=new FormAttachment(image,0);
 					data.top=new FormAttachment(name,0);
 					data.right=new FormAttachment(reply,0);
 					data.bottom=new FormAttachment(100,0);
-					text.setLayoutData(data);*/
+					text.setLayoutData(data);
 					
 					/*StyledText text2=new StyledText(c,SWT.WRAP);
 					text2.setText()
@@ -228,6 +229,7 @@ public class SWTColumnObserver implements ColumnObserver
 				    text2.setStyleRange(style1);*/
 				}
 				c.setSize(c.computeSize(SWT.DEFAULT,SWT.DEFAULT));
+				c.addMouseListener(focusListener);
 				
 				GridData dat=new GridData(SWT.FILL);
 				dat.grabExcessHorizontalSpace=true;

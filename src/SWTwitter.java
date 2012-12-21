@@ -14,6 +14,8 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -32,6 +34,7 @@ public class SWTwitter
 	public StackLayout columnStack;
 	public long replyId=-1;
 	public final Text tweetBox;
+	public SWTColumnObserver currentColumn;
 	public static void main(String[] args)
 	{
 		SWTwitter twitter=new SWTwitter();
@@ -71,7 +74,7 @@ public class SWTwitter
 		
 			Column column;
 			handler.columns.add(column = new EveryColumn());
-			SWTColumnObserver every = new SWTColumnObserver(column,this);
+			SWTColumnObserver every = currentColumn=new SWTColumnObserver(column,this);
 			handler.columns.add(column = new MentionColumn("zacaj_"));
 			SWTColumnObserver mention = new SWTColumnObserver(column,this);
 			columnStack.topControl=every.scroll;
@@ -123,7 +126,7 @@ public class SWTwitter
 				}
 			});/**/
 		shell.open();
-		/ry
+		/*try
 		{
 			BufferedReader in = new BufferedReader(new FileReader(path
 					+ "user.txt"));
@@ -146,7 +149,7 @@ public class SWTwitter
 			//for (StackTraceElement ste : ex.getStackTrace())
 				//Log.i("ZATCAP",ste.toString());
 		}/**/
-		/*{
+		{
 			BufferedReader in;
 			try
 			{
