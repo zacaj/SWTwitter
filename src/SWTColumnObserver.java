@@ -211,7 +211,7 @@ public class SWTColumnObserver implements ColumnObserver
 					});
 					favorite.addMouseListener(listener);*/
 					
-					Label text=new Label(c,SWT.WRAP);
+					Link text=new Link(c,SWT.WRAP);
 					text.setText(tweet.text);
 					data=new FormData();
 					data.left=new FormAttachment(image,0);

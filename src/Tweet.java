@@ -1,11 +1,16 @@
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.SortedMap;
+import java.util.Vector;
 
 import twitter4j.AsyncTwitter;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.TwitterAdapter;
 import twitter4j.TwitterListener;
+import twitter4j.URLEntity;
 
 
 public class Tweet extends Item
@@ -40,7 +45,39 @@ public class Tweet extends Item
 		else
 			inReplyTo=handler.getLoadedTweet(replyId);
 		isFavorited=status.isFavorited();
+		
+		class Entity
+		{
+			public int start,end;
+			public String replacement;
+			public Entity(int _start,int _end,String _r)
+			{
+				start=_start;
+				end=_end;
+				replacement=_r;
+			}
+		}
+		Vector<Entity> entities=new Vector<Entity>();
+		{
+			URLEntity[] ents=status.getURLEntities();
+			if(entities!=null)
+			{
+				for(int i=ents.length-1;i>=0;i--)
+				{
+					entities.add(new Entity(ents[i].getStart(),ents[i].getEnd(),"<a href=\""+ents[i].getExpandedURL()+"\">"+ents[i].getDisplayURL()+"</a>"));
+				}
+			}
+		}
+		if(entities.size()>=2)
+			Collections.sort(entities,new Comparator<Entity>(){
+	
+				@Override public int compare(Entity a,Entity b)
+				{
+					return a.start-b.start;
+				}
+			});
 		client=status.getSource();
+		
 	}
 	public Tweet(String name, String _text,AccountHandler _handler)
 	{

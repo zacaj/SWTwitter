@@ -126,7 +126,7 @@ public class SWTwitter
 				}
 			});/**/
 		shell.open();
-		/*try
+		try
 		{
 			BufferedReader in = new BufferedReader(new FileReader(path
 					+ "user.txt"));
@@ -149,7 +149,7 @@ public class SWTwitter
 			//for (StackTraceElement ste : ex.getStackTrace())
 				//Log.i("ZATCAP",ste.toString());
 		}/**/
-		{
+		/*{
 			BufferedReader in;
 			try
 			{
