@@ -1,6 +1,7 @@
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
 
 import org.eclipse.swt.SWT;
@@ -10,6 +11,8 @@ import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
@@ -219,6 +222,30 @@ public class SWTColumnObserver implements ColumnObserver
 					data.right=new FormAttachment(reply,0);
 					data.bottom=new FormAttachment(100,0);
 					text.setLayoutData(data);
+					text.addSelectionListener(new SelectionListener(){
+
+						@Override public void widgetSelected(SelectionEvent e)
+						{
+							try
+							{
+								Runtime.getRuntime().exec("\""+twitter.browserPath+"\" \""+e.text+"\"");
+							}
+							catch (IOException e1)
+							{
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							
+						}
+
+						@Override public void widgetDefaultSelected(
+								SelectionEvent e)
+						{
+							// TODO Auto-generated method stub
+							
+						}
+						
+					});
 					
 					/*StyledText text2=new StyledText(c,SWT.WRAP);
 					text2.setText()

@@ -118,7 +118,6 @@ public class Tweet extends Item
 			text=begin+entity.replacement+end;
 		}
 		client=status.getSource();
-		
 	}
 	public Tweet(String name, String _text,AccountHandler _handler)
 	{

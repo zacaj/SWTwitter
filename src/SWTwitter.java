@@ -35,6 +35,7 @@ public class SWTwitter
 	public long replyId=-1;
 	public final Text tweetBox;
 	public SWTColumnObserver currentColumn;
+	public String browserPath;
 	public static void main(String[] args)
 	{
 		SWTwitter twitter=new SWTwitter();
@@ -133,6 +134,7 @@ public class SWTwitter
 			String accessToken = in.readLine();
 			String accessTokenSecret = in.readLine();
 			String restUrl = in.readLine();
+			browserPath=in.readLine();
 			in.close();
 			
 			if(accessToken.length()>16)
