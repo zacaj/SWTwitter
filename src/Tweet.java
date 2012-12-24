@@ -6,11 +6,14 @@ import java.util.SortedMap;
 import java.util.Vector;
 
 import twitter4j.AsyncTwitter;
+import twitter4j.HashtagEntity;
+import twitter4j.MediaEntity;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.TwitterAdapter;
 import twitter4j.TwitterListener;
 import twitter4j.URLEntity;
+import twitter4j.UserMentionEntity;
 
 
 public class Tweet extends Item
@@ -68,6 +71,36 @@ public class Tweet extends Item
 				}
 			}
 		}
+		{
+			MediaEntity[] ents=status.getMediaEntities();
+			if(entities!=null)
+			{
+				for(int i=ents.length-1;i>=0;i--)
+				{
+					entities.add(new Entity(ents[i].getStart(),ents[i].getEnd(),"<a href=\""+ents[i].getMediaURL()+"\">"+ents[i].getDisplayURL()+"</a>"));
+				}
+			}
+		}
+		{
+			UserMentionEntity[] ents=status.getUserMentionEntities();
+			if(entities!=null)
+			{
+				for(int i=ents.length-1;i>=0;i--)
+				{
+					entities.add(new Entity(ents[i].getStart(),ents[i].getEnd(),"<a href=\"https://twitter.com/"+ents[i].getScreenName()+"\">@"+ents[i].getScreenName()+"</a>"));
+				}
+			}
+		}
+		{
+			HashtagEntity[] ents=status.getHashtagEntities();
+			if(entities!=null)
+			{
+				for(int i=ents.length-1;i>=0;i--)
+				{
+					entities.add(new Entity(ents[i].getStart(),ents[i].getEnd(),"<a href=\"https://twitter.com/search?q=%23"+ents[i].getText()+"\">#"+ents[i].getText()+"</a>"));
+				}
+			}
+		}
 		if(entities.size()>=2)
 			Collections.sort(entities,new Comparator<Entity>(){
 	
@@ -76,6 +109,14 @@ public class Tweet extends Item
 					return a.start-b.start;
 				}
 			});
+		for(int i=entities.size()-1;i>=0;i--)
+		{
+			String original=text;
+			Entity entity=entities.elementAt(i);
+			String begin=text.substring(0,entity.start);
+			String end=text.substring(entity.end,text.length());
+			text=begin+entity.replacement+end;
+		}
 		client=status.getSource();
 		
 	}
